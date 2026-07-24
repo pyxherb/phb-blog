@@ -4,18 +4,18 @@
 
 然而在实践中，Clang++对此的支持似乎存在问题，如果使用上述选项禁用`-fno-use-cxa-atexit`编译器不会去使用`.fini_array`，反而会转头使用`atexit`代替。而另一个看似与之相关的选项`-fno-register-global-dtors-with-atexit`在这种情况下完全无济于事（详见[https://github.com/llvm/llvm-project/issues/210530](这个issue)），对于在获取通用freestanding工具链困难的原生Windows平台下进行兼容GCC工具链的裸机开发（例如OS内核）的开发者来说无疑是灭顶之灾。
 
-![QEMU下挥之不去的atexit符号](./qemu-atexit-error.png)
+<img src="./qemu-atexit-error.png" style="width:50%;" />
 
 Compiler Explorer的编译结果如下：
 
-![不使用附加参数](./option-none.png)
-![使用-fno-use-cxa-atexit](./option-a.png)
-![使用-fno-register-global-dtors-with-atexit](./option-b.png)
-![两个都用](./option-ab.png)
+<img src="./option-none.png" style="width: 45%; display: inline;" />
+<img src="./option-a.png" style="width: 45%; display: inline;" />
 
+<img src="./option-b.png" style="width: 45%; display: inline;" />
+<img src="./option-ab.png" style="width: 45%; display: inline;" />
 使用`-fno-c++-static-destructors`可以暂时解决该问题，代价是可能无法正常触发C++全局对象的析构函数，对于内核等不会进行退出或卸载的程序尚可，但对于内核模块等情景则是无法忽视的致命问题。
 
-![使用-fno-c++-static-destructors](./option-x.png)
+<img src="./option-x.png" style="width: 50%;" />
 
 截至本文初稿完成当天（2026年7月25日），LLVM仍未修复该问题，因此如果要在原生Windows平台上开发兼容GCC的C++裸机程序，只能选择以下几种解决方案：
 
