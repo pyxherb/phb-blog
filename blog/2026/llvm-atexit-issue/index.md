@@ -2,7 +2,7 @@
 
 众所周知，GCC有一个`-fno-use-cxa-atexit`用于在嵌入式等环境中禁用以`__cxa_atexit`调用来注册析构函数的全局对象析构方法，转而使用`.fini_array`配合C++运行时支持（可以自己实现）的方法实现全局对象析构。此方法在嵌入式和裸机编程中十分常见，甚至是某些环境下的刚性要求。
 
-然而在实践中，Clang++对此的支持似乎存在问题，如果使用上述选项禁用`-fno-use-cxa-atexit`编译器不会去使用`.fini_array`，反而会转头使用`atexit`代替。而另一个看似与之相关的选项`-fno-register-global-dtors-with-atexit`在这种情况下完全无济于事（详见[https://github.com/llvm/llvm-project/issues/210530](这个issue)），对于在获取通用freestanding工具链困难的原生Windows平台下进行兼容GCC工具链的裸机开发（例如OS内核）的开发者来说无疑是灭顶之灾。
+然而在实践中，Clang++对此的支持似乎存在问题，如果使用上述选项禁用`-fno-use-cxa-atexit`编译器不会去使用`.fini_array`，反而会转头使用`atexit`代替。而另外几个看似与之相关的选项`-fno-register-global-dtors-with-atexit`和`-fuse-init-array`在这种情况下完全无济于事（详见[https://github.com/llvm/llvm-project/issues/210530](这个issue)），对于在获取通用freestanding工具链困难的原生Windows平台下进行兼容GCC工具链的裸机开发（例如OS内核）的开发者来说无疑是灭顶之灾。
 
 <img src="./qemu-atexit-error.png" style="width:50%;" />
 
