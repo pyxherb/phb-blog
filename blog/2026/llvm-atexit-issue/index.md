@@ -8,11 +8,12 @@
 
 Compiler Explorer的编译结果如下：
 
-<img src="./option-none.png" style="width: 45%; display: inline;" />
+<img src="./option-none.png" style="width: 45%; display: inline;" /><nobr/>
 <img src="./option-a.png" style="width: 45%; display: inline;" />
 
-<img src="./option-b.png" style="width: 45%; display: inline;" />
+<img src="./option-b.png" style="width: 45%; display: inline;" /><nobr/>
 <img src="./option-ab.png" style="width: 45%; display: inline;" />
+
 使用`-fno-c++-static-destructors`可以暂时解决该问题，代价是可能无法正常触发C++全局对象的析构函数，对于内核等不会进行退出或卸载的程序尚可，但对于内核模块等情景则是无法忽视的致命问题。
 
 <img src="./option-x.png" style="width: 50%;" />
